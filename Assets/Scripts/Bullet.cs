@@ -7,6 +7,7 @@ public class Bullet : WeaponBehaviour
     Vector2 dir;
     Rigidbody2D ri;
     public float speed;
+    public int damage;
 
     protected override void Awake()
     {
@@ -19,19 +20,24 @@ public class Bullet : WeaponBehaviour
         ri.velocity = dir * speed;
     }
 
-    public void SetBullet(PlayerBehaviour _player, float _speed)
+    public void SetBullet(PlayerBehaviour _player, float _speed, int _damage = 0)
     {
         SetPlayer(_player);
         dir = player.controller.focusDir;
         speed = _speed;
+        if (_damage == 0)
+            damage = player.state.damage;
+        else
+            damage = _damage;
     }
+
 
     public override void OnTriggerEnter2D(Collider2D _col)
     {
         if (_col.gameObject.CompareTag("Wall"))
         {
             Instantiate(hitEffect, tr.position, Quaternion.identity);
-            _col.gameObject.GetComponent<WallBehaviour>().Damage(player.state.damage, player.controller.focusDir);
+            _col.gameObject.GetComponent<WallBehaviour>().Damage(damage, player.controller.focusDir);
             Destroy(this.gameObject);
         }
     }

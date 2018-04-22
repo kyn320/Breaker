@@ -18,7 +18,7 @@ public class WallBehaviour : MonoBehaviour
         state = GetComponent<WallState>();
     }
 
-    public void Damage(int _damage, Vector2 _dir)
+    public void Damage(int _damage, Vector3 _dir)
     {
         state.SubHP(_damage);
         ri.AddForce(_dir * _damage * 0.5f, ForceMode2D.Impulse);

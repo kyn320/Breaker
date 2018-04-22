@@ -13,7 +13,12 @@ public class PlayerAI : PlayerBehaviour
     public float changeActionStateTime = 0f;
     public float aiActionStateTime = 0f;
 
-    public Vector2 minMoveArea, maxMoveArea;
+    public Vector3 minMoveArea, maxMoveArea;
+    public float wallMargin = 2f;
+
+    [SerializeField]
+    bool DEBUGMODE = false;
+    Vector3[] moveAreaBox = new Vector3[6];
 
     protected override void Awake()
     {
@@ -27,6 +32,7 @@ public class PlayerAI : PlayerBehaviour
         stateUpdate = StartCoroutine(StateUpdate());
     }
 
+
     Coroutine stateUpdate = null;
 
     IEnumerator StateUpdate()
@@ -39,34 +45,57 @@ public class PlayerAI : PlayerBehaviour
             {
                 case PlayerAIMoveState.Idle:
                     if (controller.focusDir.x < 0)
-                        minMoveArea.x = InGameManager.instance.wall.transform.position.x + 1f;
+                        minMoveArea.x = InGameManager.instance.wall.transform.position.x + wallMargin;
                     else
-                        maxMoveArea.x = InGameManager.instance.wall.transform.position.x - 1f;
+                        maxMoveArea.x = InGameManager.instance.wall.transform.position.x - wallMargin;
                     break;
                 case PlayerAIMoveState.Move:
                     if (controller.focusDir.x < 0)
-                        minMoveArea.x = InGameManager.instance.wall.transform.position.x + 1f;
+                        minMoveArea.x = InGameManager.instance.wall.transform.position.x + wallMargin;
                     else
-                        maxMoveArea.x = InGameManager.instance.wall.transform.position.x - 1f;
+                        maxMoveArea.x = InGameManager.instance.wall.transform.position.x - wallMargin;
                     break;
                 case PlayerAIMoveState.Doge:
                     break;
             }
 
+            MoveAreaBoxing();
+
             aiMoveStateTime += Time.deltaTime;
+
+            if (Physics2D.OverlapBox(moveAreaBox[4], moveAreaBox[5] * 2f, 0f, LayerMask.GetMask("Player")) == null)
+            {
+                ChangeMoveState(PlayerAIMoveState.Move);
+            }
+
 
             switch (aiActionState)
             {
                 case PlayerAIActionState.Idle:
                     break;
                 case PlayerAIActionState.Attack:
-                    Attack();
+                    controller.AttackKeyDown();
                     break;
                 case PlayerAIActionState.Skill1:
+                    controller.Hold();
+                    if (controller.skillCount == 1)
+                    {
+                        controller.AttackKeyUp();
+                    }
                     break;
                 case PlayerAIActionState.Skill2:
+                    controller.Hold();
+                    if (controller.skillCount == 2)
+                    {
+                        controller.AttackKeyUp();
+                    }
                     break;
                 case PlayerAIActionState.Skill3:
+                    controller.Hold();
+                    if (controller.skillCount == 3)
+                    {
+                        controller.AttackKeyUp();
+                    }
                     break;
             }
 
@@ -96,7 +125,7 @@ public class PlayerAI : PlayerBehaviour
 
     void ChangeActionState()
     {
-        aiActionState = (PlayerAIActionState)Random.Range(0, 5);
+        aiActionState = (PlayerAIActionState)Random.Range(1,5);
         ResetAIStateTime(aiActionState);
     }
 
@@ -123,7 +152,7 @@ public class PlayerAI : PlayerBehaviour
                 break;
             case PlayerAIMoveState.Move:
 
-                controller.SetTarget(new Vector2(Random.Range(minMoveArea.x, maxMoveArea.y), Random.Range(minMoveArea.y, maxMoveArea.y)));
+                controller.SetTarget(new Vector2(Random.Range(minMoveArea.x, maxMoveArea.x), Random.Range(minMoveArea.y, maxMoveArea.y)));
 
                 if (_changeTime > 0f)
                     changeMoveStateTime = _changeTime;
@@ -155,7 +184,7 @@ public class PlayerAI : PlayerBehaviour
                 if (_changeTime > 0f)
                     changeActionStateTime = _changeTime;
                 else
-                    changeActionStateTime = 0.1f;
+                    changeActionStateTime = skillList[0].skill.holdTime;
 
                 ChangeMoveState(PlayerAIMoveState.Idle, changeActionStateTime);
                 break;
@@ -163,7 +192,7 @@ public class PlayerAI : PlayerBehaviour
                 if (_changeTime > 0f)
                     changeActionStateTime = _changeTime;
                 else
-                    changeActionStateTime = 0.1f;
+                    changeActionStateTime = skillList[1].skill.holdTime;
 
                 ChangeMoveState(PlayerAIMoveState.Idle, changeActionStateTime);
                 break;
@@ -171,15 +200,57 @@ public class PlayerAI : PlayerBehaviour
                 if (_changeTime > 0f)
                     changeActionStateTime = _changeTime;
                 else
-                    changeActionStateTime = 0.1f;
+                    changeActionStateTime = skillList[2].skill.holdTime;
 
                 ChangeMoveState(PlayerAIMoveState.Idle, changeActionStateTime);
                 break;
         }
     }
 
-}
+    void MoveAreaBoxing()
+    {
+        moveAreaBox[0].x = minMoveArea.x;
+        moveAreaBox[0].y = maxMoveArea.y;
 
+        moveAreaBox[1].x = maxMoveArea.x;
+        moveAreaBox[1].y = maxMoveArea.y;
+
+        moveAreaBox[2].x = maxMoveArea.x;
+        moveAreaBox[2].y = minMoveArea.y;
+
+        moveAreaBox[3].x = minMoveArea.x;
+        moveAreaBox[3].y = minMoveArea.y;
+
+        moveAreaBox[4].x = (minMoveArea.x + maxMoveArea.x);
+        moveAreaBox[4].y = (minMoveArea.y + maxMoveArea.y);
+
+        moveAreaBox[4] *= 0.5f;
+
+        moveAreaBox[5].x = Mathf.Abs(maxMoveArea.x - minMoveArea.x);
+        moveAreaBox[5].y = Mathf.Abs(maxMoveArea.y - minMoveArea.y);
+        moveAreaBox[5] *= 0.5f;
+
+    }
+
+    void OnDrawGizmos()
+    {
+        if (!DEBUGMODE)
+            return;
+
+
+        Gizmos.color = new Color32(125, 125, 125, 122);
+        Gizmos.DrawCube(moveAreaBox[4] + Vector3.forward * 6f, moveAreaBox[5] * 2f);
+
+        Gizmos.color = Color.blue;
+
+        for (int i = 0; i < 4; ++i)
+        {
+            Gizmos.DrawLine(moveAreaBox[i] + Vector3.forward * 5f, moveAreaBox[i + 1 > 3 ? 0 : (i + 1)] + Vector3.forward * 5f);
+        }
+
+    }
+
+}
 
 public enum PlayerAIMoveState
 {

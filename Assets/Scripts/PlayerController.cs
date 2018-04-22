@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
     Transform tr;
     Rigidbody2D ri;
 
@@ -13,11 +12,21 @@ public class PlayerController : MonoBehaviour
     public float orignMoveSpeed;
     public float addMoveSpeed;
 
-    public Vector2 moveDir, focusDir;
+    public Vector3 moveDir, focusDir;
 
     float h, v;
+
+
+    public float skillHoldTime;
+    public int skillCount = 0;
+
     [SerializeField]
-    Vector2 targetPos;
+    Vector3 targetPos;
+    [SerializeField]
+    bool targetMove = false;
+
+    [SerializeField]
+    bool DEBUGMODE = false;
 
     void Awake()
     {
@@ -39,6 +48,7 @@ public class PlayerController : MonoBehaviour
     {
         InputUpdate();
         Move();
+
     }
 
     public void InputUpdate()
@@ -51,13 +61,53 @@ public class PlayerController : MonoBehaviour
         h = Input.GetAxisRaw("Horizontal");
         v = Input.GetAxisRaw("Vertical");
 
+
         if (Input.GetKey(KeyCode.Z))
-            Attack();
+        {
+            AttackKeyDown();
+        }
+        else if (Input.GetKeyUp(KeyCode.X))
+        {
+            AttackKeyUp();
+        }
+        else if (Input.GetKey(KeyCode.X))
+        {
+            Hold();
+        }
 
 #elif UNITY_ANDROID || UNITY_IOS
         //joyStick
 #endif
 
+    }
+
+    public void Hold()
+    {
+        skillHoldTime += Time.deltaTime;
+        int checkSkillCount = 0;
+        for (int i = 0; i < player.skillList.Length; ++i)
+        {
+            if (player.skillList[i].CheckUse(skillHoldTime))
+            {
+                ++checkSkillCount;
+            }
+        }
+        skillCount = checkSkillCount;
+    }
+
+    public void AttackKeyUp()
+    {
+        skillHoldTime = 0;
+        if (skillCount > 0)
+        {
+            player.skillList[skillCount - 1].Use();
+            skillCount = 0;
+        }
+    }
+
+    public void AttackKeyDown()
+    {
+        Attack();
     }
 
     public void SetDir(float _h, float _v)
@@ -66,13 +116,15 @@ public class PlayerController : MonoBehaviour
         v = _v;
     }
 
-    public void SetTarget(Vector2 _target)
+    public void SetTarget(Vector3 _target)
     {
         targetPos = _target;
-        Vector2 dir = targetPos - (Vector2)tr.position;
+        Vector3 dir = targetPos - tr.position;
         dir.Normalize();
         h = dir.x;
         v = dir.y;
+
+        targetMove = true;
     }
 
     public void SetMoveSpeed()
@@ -88,6 +140,13 @@ public class PlayerController : MonoBehaviour
         moveDir = new Vector2(h, v).normalized;
 
         ri.velocity = moveDir * (orignMoveSpeed + addMoveSpeed);
+
+        if (targetMove && (targetPos - tr.position).sqrMagnitude <= 0.1f)
+        {
+            h = v = 0;
+            moveDir = targetPos = Vector3.zero;
+            targetMove = false;
+        }
     }
 
     public void Attack()
@@ -98,6 +157,24 @@ public class PlayerController : MonoBehaviour
     public void Doge()
     {
 
+    }
+
+    void OnDrawGizmos()
+    {
+        if (!DEBUGMODE)
+            return;
+
+        if (moveDir != Vector3.zero)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(tr.position + Vector3.forward * 3f, moveDir * 1f);
+        }
+
+        if (targetMove)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawSphere(targetPos + Vector3.forward * 3f, 0.1f);
+        }
     }
 
 }

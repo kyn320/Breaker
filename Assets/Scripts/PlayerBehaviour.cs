@@ -8,17 +8,24 @@ public class PlayerBehaviour : MonoBehaviour
     public PlayerState state;
     [HideInInspector]
     public PlayerController controller;
-    
+
     public WeaponBehaviour weapon;
+
+    public SkillBehaviour[] skillList;
 
     protected virtual void Awake()
     {
         state = GetComponent<PlayerState>();
         controller = GetComponent<PlayerController>();
         weapon.SetPlayer(this);
+        for (int i = 0; i < skillList.Length; ++i)
+        {
+            skillList[i].SetPlayer(this);
+        }
     }
 
-    public void Attack() {
+    public void Attack()
+    {
         weapon.Attack();
     }
 
