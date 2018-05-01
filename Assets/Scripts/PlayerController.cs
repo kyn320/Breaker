@@ -159,6 +159,37 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void KnockBack(float _power)
+    {
+        player.state.isInput = player.state.isMove = false;
+
+        ri.drag = 50f;
+        ri.AddForce(-focusDir * _power * 0.5f, ForceMode2D.Impulse);
+
+        if (knockBack != null)
+        {
+            StopCoroutine(knockBack);
+        }
+
+        StartCoroutine(KnockBackChecker());
+    }
+
+    Coroutine knockBack = null;
+
+    IEnumerator KnockBackChecker()
+    {
+        while (ri.velocity != Vector2.zero)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+
+        player.state.isInput = player.state.isMove = true;
+
+        ri.drag = 1f;
+        knockBack = null;
+    }
+
+
     void OnDrawGizmos()
     {
         if (!DEBUGMODE)

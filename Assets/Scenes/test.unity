@@ -136,7 +136,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &17117928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -450,7 +450,7 @@ MonoBehaviour:
   attackEffect: {fileID: 0}
   hitEffect: {fileID: 1040608886635896, guid: a97415c6b57076f41a6621a7b51d63a3, type: 2}
   bulletSpeed: 10
-  bulletPrefab: {fileID: 1448436060582970, guid: e21fdc974c282cf4b86fac0c61696c4c,
+  bulletPrefab: {fileID: 1448436060582970, guid: fa17535cc3c2647469919615bace51c4,
     type: 2}
 --- !u!212 &108517309
 SpriteRenderer:
@@ -544,7 +544,7 @@ MonoBehaviour:
   attackEffect: {fileID: 0}
   hitEffect: {fileID: 1040608886635896, guid: a97415c6b57076f41a6621a7b51d63a3, type: 2}
   bulletSpeed: 10
-  bulletPrefab: {fileID: 1448436060582970, guid: e21fdc974c282cf4b86fac0c61696c4c,
+  bulletPrefab: {fileID: 1448436060582970, guid: fa17535cc3c2647469919615bace51c4,
     type: 2}
 --- !u!212 &152081130
 SpriteRenderer:
@@ -695,7 +695,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &245741876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -963,7 +963,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &283869265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1360,7 +1360,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &522491022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1730,6 +1730,7 @@ MonoBehaviour:
   maxSuperAmor: 0
   criticalPercent: 0
   moveSpeed: 0
+  knockBackPower: 150
 --- !u!114 &616141016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1913,7 +1914,7 @@ MonoBehaviour:
   attackEffect: {fileID: 0}
   hitEffect: {fileID: 1040608886635896, guid: a97415c6b57076f41a6621a7b51d63a3, type: 2}
   bulletSpeed: 10
-  bulletPrefab: {fileID: 1448436060582970, guid: e21fdc974c282cf4b86fac0c61696c4c,
+  bulletPrefab: {fileID: 1448436060582970, guid: fa17535cc3c2647469919615bace51c4,
     type: 2}
 --- !u!212 &748184248
 SpriteRenderer:
@@ -2116,7 +2117,7 @@ MonoBehaviour:
   attackEffect: {fileID: 0}
   hitEffect: {fileID: 1040608886635896, guid: a97415c6b57076f41a6621a7b51d63a3, type: 2}
   bulletSpeed: 10
-  bulletPrefab: {fileID: 1448436060582970, guid: e21fdc974c282cf4b86fac0c61696c4c,
+  bulletPrefab: {fileID: 1448436060582970, guid: fa17535cc3c2647469919615bace51c4,
     type: 2}
 --- !u!212 &977164755
 SpriteRenderer:
@@ -2210,7 +2211,7 @@ MonoBehaviour:
   attackEffect: {fileID: 0}
   hitEffect: {fileID: 1040608886635896, guid: a97415c6b57076f41a6621a7b51d63a3, type: 2}
   bulletSpeed: 10
-  bulletPrefab: {fileID: 1448436060582970, guid: e21fdc974c282cf4b86fac0c61696c4c,
+  bulletPrefab: {fileID: 1448436060582970, guid: fa17535cc3c2647469919615bace51c4,
     type: 2}
 --- !u!212 &1085564603
 SpriteRenderer:
@@ -2304,7 +2305,7 @@ MonoBehaviour:
   attackEffect: {fileID: 0}
   hitEffect: {fileID: 1040608886635896, guid: a97415c6b57076f41a6621a7b51d63a3, type: 2}
   bulletSpeed: 10
-  bulletPrefab: {fileID: 1448436060582970, guid: e21fdc974c282cf4b86fac0c61696c4c,
+  bulletPrefab: {fileID: 1448436060582970, guid: fa17535cc3c2647469919615bace51c4,
     type: 2}
 --- !u!212 &1101146722
 SpriteRenderer:
@@ -2659,7 +2660,7 @@ MonoBehaviour:
   attackEffect: {fileID: 0}
   hitEffect: {fileID: 1040608886635896, guid: a97415c6b57076f41a6621a7b51d63a3, type: 2}
   bulletSpeed: 10
-  bulletPrefab: {fileID: 1448436060582970, guid: e21fdc974c282cf4b86fac0c61696c4c,
+  bulletPrefab: {fileID: 1448436060582970, guid: fa17535cc3c2647469919615bace51c4,
     type: 2}
 --- !u!212 &1361373583
 SpriteRenderer:
@@ -2741,7 +2742,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1370957541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2999,7 +3000,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1407344005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3279,7 +3280,7 @@ MonoBehaviour:
   attackEffect: {fileID: 0}
   hitEffect: {fileID: 1040608886635896, guid: a97415c6b57076f41a6621a7b51d63a3, type: 2}
   bulletSpeed: 10
-  bulletPrefab: {fileID: 1448436060582970, guid: e21fdc974c282cf4b86fac0c61696c4c,
+  bulletPrefab: {fileID: 1448436060582970, guid: fa17535cc3c2647469919615bace51c4,
     type: 2}
 --- !u!212 &1481876303
 SpriteRenderer:
@@ -3361,7 +3362,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!50 &1485810563
 Rigidbody2D:
   serializedVersion: 4
@@ -3806,7 +3807,7 @@ MonoBehaviour:
   attackEffect: {fileID: 0}
   hitEffect: {fileID: 1040608886635896, guid: a97415c6b57076f41a6621a7b51d63a3, type: 2}
   bulletSpeed: 10
-  bulletPrefab: {fileID: 1448436060582970, guid: e21fdc974c282cf4b86fac0c61696c4c,
+  bulletPrefab: {fileID: 1448436060582970, guid: fa17535cc3c2647469919615bace51c4,
     type: 2}
 --- !u!212 &1766747220
 SpriteRenderer:
@@ -3950,7 +3951,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!50 &1822706858
 Rigidbody2D:
   serializedVersion: 4
@@ -4218,7 +4219,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1894330539
 MonoBehaviour:
   m_ObjectHideFlags: 0

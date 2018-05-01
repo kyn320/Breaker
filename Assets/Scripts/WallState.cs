@@ -4,5 +4,7 @@ using UnityEngine;
 
 public class WallState : State {
 
+
+    public float knockBackPower;
 	
 }

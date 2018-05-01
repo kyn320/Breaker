@@ -10,6 +10,7 @@ public class WallBehaviour : MonoBehaviour
 
     protected WallState state;
 
+
     void Awake()
     {
         tr = GetComponent<Transform>();
@@ -27,5 +28,11 @@ public class WallBehaviour : MonoBehaviour
             Destroy(this.gameObject);
     }
 
-
+    private void OnCollisionEnter2D(Collision2D _col)
+    {
+        if (_col.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            _col.gameObject.GetComponent<PlayerBehaviour>().KnockBack(state.knockBackPower);
+        }
+    }
 }

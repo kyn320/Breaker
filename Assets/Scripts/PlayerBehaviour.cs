@@ -29,5 +29,9 @@ public class PlayerBehaviour : MonoBehaviour
         weapon.Attack();
     }
 
+    public void KnockBack(float _power) {
+        controller.KnockBack(_power);
+    }
+
 
 }
