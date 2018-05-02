@@ -100,6 +100,8 @@ public class PlayerController : MonoBehaviour
         skillHoldTime = 0;
         if (skillCount > 0)
         {
+
+            //player.AnimationPlay(3);
             player.skillList[skillCount - 1].Use();
             skillCount = 0;
         }
@@ -135,9 +137,14 @@ public class PlayerController : MonoBehaviour
     public void Move()
     {
         if (!player.state.isMove)
+        {
+            //player.AnimationPlay(0);
             return;
+        }
 
         moveDir = new Vector2(h, v).normalized;
+
+        //player.AnimationPlay(1);
 
         ri.velocity = moveDir * (orignMoveSpeed + addMoveSpeed);
 
@@ -151,6 +158,7 @@ public class PlayerController : MonoBehaviour
 
     public void Attack()
     {
+        player.AnimationPlay(2);
         player.Attack();
     }
 

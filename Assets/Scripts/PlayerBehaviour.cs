@@ -13,6 +13,14 @@ public class PlayerBehaviour : MonoBehaviour
 
     public SkillBehaviour[] skillList;
 
+    public Animator ani;
+
+    [Header("애니메이션 이름")]
+    [Header("0 = 대기 | 1 = 달리기 | 2 = 공격 | 3 = 스킬")]
+    [SerializeField]
+    string[] aniSet = new string[] { "Idle", "Run", "Attack", "Skill" };
+
+
     protected virtual void Awake()
     {
         state = GetComponent<PlayerState>();
@@ -29,8 +37,14 @@ public class PlayerBehaviour : MonoBehaviour
         weapon.Attack();
     }
 
-    public void KnockBack(float _power) {
+    public void KnockBack(float _power)
+    {
         controller.KnockBack(_power);
+    }
+
+    public void AnimationPlay(int _id)
+    {
+        ani.Play(aniSet[_id]);
     }
 
 
