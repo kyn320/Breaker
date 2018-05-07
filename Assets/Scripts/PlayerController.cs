@@ -75,6 +75,11 @@ public class PlayerController : MonoBehaviour
             Hold();
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Jump();
+        }
+
 #elif UNITY_ANDROID || UNITY_IOS
         //joyStick
 #endif
@@ -165,6 +170,43 @@ public class PlayerController : MonoBehaviour
     public void Doge()
     {
 
+    }
+
+    public void Jump()
+    {
+        if (!player.state.isJump)
+            return;
+
+        player.state.isJump = true;
+        player.state.isInput = player.state.isMove = false;
+
+        moveDir = new Vector2(h, v).normalized;
+        
+        ri.drag = 7f;
+        ri.AddForce(moveDir * orignMoveSpeed * 5f, ForceMode2D.Impulse);
+
+        if (jump != null)
+        {
+            StopCoroutine(jump);
+        }
+
+        StartCoroutine(JumpChecker());
+    }
+
+    Coroutine jump = null;
+
+    IEnumerator JumpChecker()
+    {
+        while ((ri.velocity - Vector2.zero).sqrMagnitude > 0.2f)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+
+        player.state.isJump = false;
+        player.state.isInput = player.state.isMove = true;
+
+        ri.drag = 1f;
+        jump = null;
     }
 
     public void KnockBack(float _power)

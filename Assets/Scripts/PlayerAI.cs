@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class PlayerAI : PlayerBehaviour
 {
+    public static PlayerAIManager manager;
+
+    private Transform tr;
+
     public PlayerAIMoveState aiMoveState = PlayerAIMoveState.Idle;
     public PlayerAIActionState aiActionState = PlayerAIActionState.Idle;
 
@@ -13,18 +17,22 @@ public class PlayerAI : PlayerBehaviour
     public float changeActionStateTime = 0f;
     public float aiActionStateTime = 0f;
 
-    public Vector3 minMoveArea, maxMoveArea;
+    private BoxCollider2D moveAreaCollider;
+    public int belongAreaID = 0;
     public float wallMargin = 2f;
+    public int focusDir = 0;
+
+    public Vector2 minMoveArea, maxMoveArea;
 
     [SerializeField]
     bool DEBUGMODE = false;
-    Vector3[] moveAreaBox = new Vector3[6];
 
     protected override void Awake()
     {
         base.Awake();
         state.isAI = true;
         state.isInput = false;
+        tr = GetComponent<Transform>();
     }
 
     void Start()
@@ -44,30 +52,36 @@ public class PlayerAI : PlayerBehaviour
             switch (aiMoveState)
             {
                 case PlayerAIMoveState.Idle:
-                    if (controller.focusDir.x < 0)
-                        minMoveArea.x = InGameManager.instance.wall.transform.position.x + wallMargin;
-                    else
-                        maxMoveArea.x = InGameManager.instance.wall.transform.position.x - wallMargin;
-                    break;
                 case PlayerAIMoveState.Move:
                     if (controller.focusDir.x < 0)
-                        minMoveArea.x = InGameManager.instance.wall.transform.position.x + wallMargin;
-                    else
-                        maxMoveArea.x = InGameManager.instance.wall.transform.position.x - wallMargin;
+                    {
+                        minMoveArea.x = manager.wallTransform.position.x + wallMargin;
+                        focusDir = -1;
+                    }
+                    else {
+                        maxMoveArea.x = manager.wallTransform.position.x - wallMargin;
+                        focusDir = 1;
+                    }
+
+                    if (!manager.IsContainArea(belongAreaID, tr))
+                    {
+                        ChangeMoveState(PlayerAIMoveState.Move);
+                    }
+
                     break;
                 case PlayerAIMoveState.Doge:
                     break;
+                case PlayerAIMoveState.Jump:
+                    if (!state.isJump)
+                    {
+                        int checkAreaArrive = manager.FindContainID(tr);
+                        belongAreaID = checkAreaArrive != -1 ? checkAreaArrive : belongAreaID;
+                        ChangeMoveState(PlayerAIMoveState.Move);
+                    }
+                    break;
             }
-
-            MoveAreaBoxing();
 
             aiMoveStateTime += Time.deltaTime;
-
-            if (Physics2D.OverlapBox(moveAreaBox[4], moveAreaBox[5] * 2f, 0f, LayerMask.GetMask("Player")) == null)
-            {
-                ChangeMoveState(PlayerAIMoveState.Move);
-            }
-
 
             switch (aiActionState)
             {
@@ -113,7 +127,7 @@ public class PlayerAI : PlayerBehaviour
 
     void ChangeMoveState()
     {
-        aiMoveState = (PlayerAIMoveState)Random.Range(0, 3);
+        aiMoveState = (PlayerAIMoveState)Random.Range(0, 4);
         ResetAIStateTime(aiMoveState);
     }
 
@@ -125,7 +139,7 @@ public class PlayerAI : PlayerBehaviour
 
     void ChangeActionState()
     {
-        aiActionState = (PlayerAIActionState)Random.Range(1,5);
+        aiActionState = (PlayerAIActionState)Random.Range(1, 2);
         ResetAIStateTime(aiActionState);
     }
 
@@ -150,20 +164,28 @@ public class PlayerAI : PlayerBehaviour
                 else
                     changeMoveStateTime = 2f;
                 break;
+
             case PlayerAIMoveState.Move:
 
-                controller.SetTarget(new Vector2(Random.Range(minMoveArea.x, maxMoveArea.x), Random.Range(minMoveArea.y, maxMoveArea.y)));
+                controller.SetTarget(GetRandomPos());
 
                 if (_changeTime > 0f)
                     changeMoveStateTime = _changeTime;
                 else
                     changeMoveStateTime = 2f;
                 break;
+
             case PlayerAIMoveState.Doge:
                 if (_changeTime > 0f)
                     changeMoveStateTime = _changeTime;
                 else
                     changeMoveStateTime = 0.1f;
+                break;
+
+            case PlayerAIMoveState.Jump:
+                controller.SetTarget(GetRandomPos());
+                controller.Jump();
+                changeMoveStateTime = 999f;
                 break;
         }
     }
@@ -207,47 +229,27 @@ public class PlayerAI : PlayerBehaviour
         }
     }
 
-    void MoveAreaBoxing()
+    public Vector2 GetRandomPos()
     {
-        moveAreaBox[0].x = minMoveArea.x;
-        moveAreaBox[0].y = maxMoveArea.y;
+        moveAreaCollider = manager.GetMoveAreaWithID(belongAreaID);
 
-        moveAreaBox[1].x = maxMoveArea.x;
-        moveAreaBox[1].y = maxMoveArea.y;
+        Vector2 randPos;
 
-        moveAreaBox[2].x = maxMoveArea.x;
-        moveAreaBox[2].y = minMoveArea.y;
-
-        moveAreaBox[3].x = minMoveArea.x;
-        moveAreaBox[3].y = minMoveArea.y;
-
-        moveAreaBox[4].x = (minMoveArea.x + maxMoveArea.x);
-        moveAreaBox[4].y = (minMoveArea.y + maxMoveArea.y);
-
-        moveAreaBox[4] *= 0.5f;
-
-        moveAreaBox[5].x = Mathf.Abs(maxMoveArea.x - minMoveArea.x);
-        moveAreaBox[5].y = Mathf.Abs(maxMoveArea.y - minMoveArea.y);
-        moveAreaBox[5] *= 0.5f;
-
-    }
-
-    void OnDrawGizmos()
-    {
-        if (!DEBUGMODE)
-            return;
-
-
-        Gizmos.color = new Color32(125, 125, 125, 122);
-        Gizmos.DrawCube(moveAreaBox[4] + Vector3.forward * 6f, moveAreaBox[5] * 2f);
-
-        Gizmos.color = Color.blue;
-
-        for (int i = 0; i < 4; ++i)
+        if (focusDir < 0)
         {
-            Gizmos.DrawLine(moveAreaBox[i] + Vector3.forward * 5f, moveAreaBox[i + 1 > 3 ? 0 : (i + 1)] + Vector3.forward * 5f);
+            randPos = new Vector2(Random.Range(minMoveArea.x,
+                                                    moveAreaCollider.bounds.max.x),
+                                        Random.Range(moveAreaCollider.bounds.min.y,
+                                                     moveAreaCollider.bounds.max.y));
+        }
+        else {
+            randPos = new Vector2(Random.Range(moveAreaCollider.bounds.min.x,
+                                                    maxMoveArea.x),
+                                        Random.Range(moveAreaCollider.bounds.min.y,
+                                                     moveAreaCollider.bounds.max.y));
         }
 
+        return randPos;
     }
 
 }
@@ -256,7 +258,8 @@ public enum PlayerAIMoveState
 {
     Idle,
     Move,
-    Doge
+    Doge,
+    Jump
 }
 
 public enum PlayerAIActionState

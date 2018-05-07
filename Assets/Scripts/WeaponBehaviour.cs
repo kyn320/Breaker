@@ -50,7 +50,7 @@ public class WeaponBehaviour : MonoBehaviour
     {
         if (isAttack && _col.gameObject.CompareTag("Wall"))
         {
-            Instantiate(hitEffect, _col.contacts[0].point, Quaternion.identity);
+            ObjectPoolManager.Instance.Get(hitEffect.name, _col.contacts[0].point, Quaternion.identity);
             _col.gameObject.GetComponent<WallBehaviour>().Damage(player.state.damage,player.controller.focusDir);
         }
 
@@ -64,7 +64,7 @@ public class WeaponBehaviour : MonoBehaviour
     public virtual void OnTriggerEnter2D(Collider2D _col) {
         if (isAttack &&  _col.gameObject.CompareTag("Wall"))
         {
-            Instantiate(hitEffect, _col.transform.position, Quaternion.identity);
+            ObjectPoolManager.Instance.Get(hitEffect.name, _col.transform.position, Quaternion.identity);
             _col.gameObject.GetComponent<WallBehaviour>().Damage(player.state.damage, player.controller.focusDir);
         }
     }

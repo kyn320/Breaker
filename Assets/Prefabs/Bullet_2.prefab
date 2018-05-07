@@ -23,8 +23,9 @@ GameObject:
   - component: {fileID: 114447113715392470}
   - component: {fileID: 61108743671269880}
   - component: {fileID: 50655426814048942}
+  - component: {fileID: 114541975313555688}
   m_Layer: 0
-  m_Name: Bullet 1
+  m_Name: Bullet_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107,6 +108,18 @@ MonoBehaviour:
   hitEffect: {fileID: 1040608886635896, guid: a97415c6b57076f41a6621a7b51d63a3, type: 2}
   speed: 0
   damage: 0
+--- !u!114 &114541975313555688
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1448436060582970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cbc55ae38d4f3a4c9d41ca889f02ea9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxTime: 2
 --- !u!212 &212565877502180474
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -142,7 +155,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 2872a7620306f3a49a4a06b3cb097f7e, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.986207, g: 0, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

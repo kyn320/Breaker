@@ -36,9 +36,11 @@ public class Bullet : WeaponBehaviour
     {
         if (_col.gameObject.CompareTag("Wall"))
         {
-            Instantiate(hitEffect, tr.position, Quaternion.identity);
+            ObjectPoolManager.Instance.Get(hitEffect.name, tr.position, Quaternion.identity);
             _col.gameObject.GetComponent<WallBehaviour>().Damage(damage, player.controller.focusDir);
-            Destroy(this.gameObject);
+            ri.velocity = Vector2.zero;
+            SetPlayer(null);
+            ObjectPoolManager.Instance.Free(this.gameObject);
         }
     }
 

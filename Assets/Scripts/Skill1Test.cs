@@ -14,7 +14,7 @@ public class Skill1Test : SkillBehaviour
 
     public override IEnumerator Action()
     {
-        GameObject g = Instantiate(bulletPrefab, player.transform.position, Quaternion.identity);
+        GameObject g = ObjectPoolManager.Instance.Get(bulletPrefab.name, player.transform.position, Quaternion.identity);
         g.GetComponent<Bullet>().SetBullet(player, bulletSpeed, (int)(player.state.damage * skill.damagePercent));
 
         while (currentTime < skill.time)

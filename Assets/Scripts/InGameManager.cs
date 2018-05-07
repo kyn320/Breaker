@@ -14,6 +14,7 @@ public class InGameManager : MonoBehaviour
 
     public bool isPlay = false;
 
+
     void Awake()
     {
         instance = this;
