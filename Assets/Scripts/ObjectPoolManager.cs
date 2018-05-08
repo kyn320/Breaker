@@ -31,7 +31,9 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             int amount = defaultAmount;
 
             if (poolAmount.Length > i && poolAmount[i] != 0)
+            {
                 amount = poolAmount[i];
+            }
 
             for (int j = 0; j < amount; ++j)
             {
@@ -65,6 +67,9 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         else {
             GameObject obj = Instantiate(pool.source);
             obj.transform.parent = pool.folder.transform;
+
+            ++pool.maxAmount;
+            print(_name + " / Pool Size" + pool.maxAmount);
             return obj;
         }
     }
@@ -93,6 +98,11 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             obj.transform.parent = pool.folder.transform;
             obj.transform.position = _position;
             obj.transform.rotation = _rotation;
+
+
+            ++pool.maxAmount;
+            print(_name + " / Pool Size" + pool.maxAmount);
+
             return obj;
         }
     }

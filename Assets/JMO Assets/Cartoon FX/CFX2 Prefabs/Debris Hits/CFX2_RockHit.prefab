@@ -177,7 +177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cbc55ae38d4f3a4c9d41ca889f02ea9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxTime: 2
+  maxTime: 1
 --- !u!198 &198330214428362902
 ParticleSystem:
   m_ObjectHideFlags: 1

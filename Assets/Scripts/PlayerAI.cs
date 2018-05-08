@@ -58,7 +58,8 @@ public class PlayerAI : PlayerBehaviour
                         minMoveArea.x = manager.wallTransform.position.x + wallMargin;
                         focusDir = -1;
                     }
-                    else {
+                    else
+                    {
                         maxMoveArea.x = manager.wallTransform.position.x - wallMargin;
                         focusDir = 1;
                     }
@@ -242,7 +243,8 @@ public class PlayerAI : PlayerBehaviour
                                         Random.Range(moveAreaCollider.bounds.min.y,
                                                      moveAreaCollider.bounds.max.y));
         }
-        else {
+        else
+        {
             randPos = new Vector2(Random.Range(moveAreaCollider.bounds.min.x,
                                                     maxMoveArea.x),
                                         Random.Range(moveAreaCollider.bounds.min.y,
@@ -252,7 +254,40 @@ public class PlayerAI : PlayerBehaviour
         return randPos;
     }
 
+
+    void OnDrawGizmos()
+    {
+        if (!DEBUGMODE || moveAreaCollider == null)
+            return;
+
+        Gizmos.color = Color.green;
+
+        Vector3 center = new Vector3();
+        Vector3 size = new Vector3();
+
+        if (focusDir < 0)
+        {
+            center.x = (minMoveArea.x + moveAreaCollider.bounds.max.x) * 0.5f;
+            center.y = (moveAreaCollider.bounds.min.y + moveAreaCollider.bounds.max.y) * 0.5f;
+
+            size.x = Mathf.Abs(moveAreaCollider.bounds.max.x - minMoveArea.x);
+            size.y = Mathf.Abs(moveAreaCollider.bounds.max.y - moveAreaCollider.bounds.min.y);
+        }
+        else
+        {
+            center.x = (moveAreaCollider.bounds.min.x + maxMoveArea.x) * 0.5f;
+            center.y = (moveAreaCollider.bounds.min.y + moveAreaCollider.bounds.max.y) * 0.5f;
+
+            size.x = Mathf.Abs(maxMoveArea.x - moveAreaCollider.bounds.min.x);
+            size.y = Mathf.Abs(moveAreaCollider.bounds.max.y - moveAreaCollider.bounds.min.y);
+        }
+
+        Gizmos.DrawCube(center + Vector3.forward * 5f, size);
+    }
+
 }
+
+
 
 public enum PlayerAIMoveState
 {

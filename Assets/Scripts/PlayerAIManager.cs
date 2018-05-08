@@ -9,6 +9,8 @@ public class PlayerAIManager : MonoBehaviour
 
     public BoxCollider2D[] moveAreaCollider;
 
+    public List<CompositeCollider2D> compositeMoveArea;
+
     public List<PlayerAI> aiList;
 
     public Transform wallTransform;
@@ -16,6 +18,15 @@ public class PlayerAIManager : MonoBehaviour
     void Awake()
     {
         PlayerAI.manager = this;
+    }
+
+    private void FixedUpdate()
+    {
+        for (int i = 0; i < moveAreaCollider.Length; ++i) {
+            if (moveAreaCollider[i].composite != null && compositeMoveArea.Find(item => item == moveAreaCollider[i].composite) == null) {
+                compositeMoveArea.Add(moveAreaCollider[i].composite);
+            }
+        }
     }
 
     void OnDrawGizmos()

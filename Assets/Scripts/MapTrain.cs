@@ -11,6 +11,7 @@ public class MapTrain : MonoBehaviour
     public int[] trainStateXList, trainStateYList;
 
     public float timeChangeDelay = 15f;
+    public float moveSpeed = 1f;
 
     void Start()
     {
@@ -38,7 +39,7 @@ public class MapTrain : MonoBehaviour
             trainList[i].position = Vector2.Lerp(trainList[i].position,
                 new Vector2(originPos[i].x + moveRange[i].x * trainStateXList[i],
                 originPos[i].y + moveRange[i].y * trainStateYList[i]),
-                Time.deltaTime);
+                Time.deltaTime * moveSpeed);
         }
     }
 
