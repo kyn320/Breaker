@@ -17,12 +17,22 @@ public class PlayerAI : PlayerBehaviour
     public float changeActionStateTime = 0f;
     public float aiActionStateTime = 0f;
 
+    public MoveArea moveArea;
     private BoxCollider2D moveAreaCollider;
+    private BoxCollider2D aiCollider;
     public int belongAreaID = 0;
     public float wallMargin = 2f;
+
+    public float moveAreaMarginUp;
+    public float moveAreaMarginDown;
+    public float moveAreaMarginLeft;
+    public float moveAreaMarginRight;
+
     public int focusDir = 0;
 
     public Vector2 minMoveArea, maxMoveArea;
+    public Vector2 moveAreaCenter, moveAreaSize;
+
 
     [SerializeField]
     bool DEBUGMODE = false;
@@ -33,6 +43,7 @@ public class PlayerAI : PlayerBehaviour
         state.isAI = true;
         state.isInput = false;
         tr = GetComponent<Transform>();
+        aiCollider = GetComponent<BoxCollider2D>();
     }
 
     void Start()
@@ -64,11 +75,6 @@ public class PlayerAI : PlayerBehaviour
                         focusDir = 1;
                     }
 
-                    if (!manager.IsContainArea(belongAreaID, tr))
-                    {
-                        ChangeMoveState(PlayerAIMoveState.Move);
-                    }
-
                     break;
                 case PlayerAIMoveState.Doge:
                     break;
@@ -76,11 +82,22 @@ public class PlayerAI : PlayerBehaviour
                     if (!state.isJump)
                     {
                         int checkAreaArrive = manager.FindContainID(tr);
-                        belongAreaID = checkAreaArrive != -1 ? checkAreaArrive : belongAreaID;
+                        belongAreaID = checkAreaArrive != -1 ? (checkAreaArrive + 1) : belongAreaID;
                         ChangeMoveState(PlayerAIMoveState.Move);
                     }
                     break;
             }
+
+            if (!manager.IsContainPointInArea(belongAreaID - 1, tr))
+            {
+                ChangeMoveState(PlayerAIMoveState.Move);
+            }
+
+            //if (!manager.IsContainBoundInArea(belongAreaID - 1, aiCollider.bounds))
+            //{
+            //    print("out bound");
+            //    ChangeMoveState(PlayerAIMoveState.Move);
+            //}
 
             aiMoveStateTime += Time.deltaTime;
 
@@ -232,28 +249,34 @@ public class PlayerAI : PlayerBehaviour
 
     public Vector2 GetRandomPos()
     {
-        moveAreaCollider = manager.GetMoveAreaWithID(belongAreaID);
+        moveAreaCollider = manager.GetMoveAreaColliderWithID(belongAreaID - 1);
+        moveArea = manager.GetMoveAreaWithID(belongAreaID - 1);
 
         Vector2 randPos;
 
         if (focusDir < 0)
         {
-            randPos = new Vector2(Random.Range(minMoveArea.x,
-                                                    moveAreaCollider.bounds.max.x),
-                                        Random.Range(moveAreaCollider.bounds.min.y,
-                                                     moveAreaCollider.bounds.max.y));
+            randPos = new Vector2(Random.Range(minMoveArea.x + moveAreaMarginLeft,
+                                                    moveAreaCollider.bounds.max.x - moveAreaMarginRight),
+                                        Random.Range(moveAreaCollider.bounds.min.y + moveAreaMarginDown,
+                                                     moveAreaCollider.bounds.max.y - moveAreaMarginUp));
         }
         else
         {
-            randPos = new Vector2(Random.Range(moveAreaCollider.bounds.min.x,
-                                                    maxMoveArea.x),
-                                        Random.Range(moveAreaCollider.bounds.min.y,
-                                                     moveAreaCollider.bounds.max.y));
+            randPos = new Vector2(Random.Range(moveAreaCollider.bounds.min.x + moveAreaMarginLeft,
+                                                    maxMoveArea.x - moveAreaMarginRight),
+                                        Random.Range(moveAreaCollider.bounds.min.y + moveAreaMarginDown,
+                                                     moveAreaCollider.bounds.max.y - moveAreaMarginUp));
         }
 
         return randPos;
     }
 
+    public void ChangeAreaID(int _areaID)
+    {
+
+
+    }
 
     void OnDrawGizmos()
     {
@@ -262,27 +285,24 @@ public class PlayerAI : PlayerBehaviour
 
         Gizmos.color = Color.green;
 
-        Vector3 center = new Vector3();
-        Vector3 size = new Vector3();
-
         if (focusDir < 0)
         {
-            center.x = (minMoveArea.x + moveAreaCollider.bounds.max.x) * 0.5f;
-            center.y = (moveAreaCollider.bounds.min.y + moveAreaCollider.bounds.max.y) * 0.5f;
+            moveAreaCenter.x = ((minMoveArea.x + moveAreaMarginLeft) + (moveAreaCollider.bounds.max.x - moveAreaMarginRight)) * 0.5f;
+            moveAreaCenter.y = ((moveAreaCollider.bounds.min.y + moveAreaMarginDown) + (moveAreaCollider.bounds.max.y - moveAreaMarginUp)) * 0.5f;
 
-            size.x = Mathf.Abs(moveAreaCollider.bounds.max.x - minMoveArea.x);
-            size.y = Mathf.Abs(moveAreaCollider.bounds.max.y - moveAreaCollider.bounds.min.y);
+            moveAreaSize.x = Mathf.Abs((moveAreaCollider.bounds.max.x - moveAreaMarginRight) - (minMoveArea.x + moveAreaMarginLeft));
+            moveAreaSize.y = Mathf.Abs((moveAreaCollider.bounds.max.y - moveAreaMarginUp) - (moveAreaCollider.bounds.min.y + moveAreaMarginDown));
         }
         else
         {
-            center.x = (moveAreaCollider.bounds.min.x + maxMoveArea.x) * 0.5f;
-            center.y = (moveAreaCollider.bounds.min.y + moveAreaCollider.bounds.max.y) * 0.5f;
+            moveAreaCenter.x = ((moveAreaCollider.bounds.min.x + moveAreaMarginLeft) + (maxMoveArea.x - moveAreaMarginRight)) * 0.5f;
+            moveAreaCenter.y = ((moveAreaCollider.bounds.min.y + moveAreaMarginDown) + (moveAreaCollider.bounds.max.y - moveAreaMarginUp)) * 0.5f;
 
-            size.x = Mathf.Abs(maxMoveArea.x - moveAreaCollider.bounds.min.x);
-            size.y = Mathf.Abs(moveAreaCollider.bounds.max.y - moveAreaCollider.bounds.min.y);
+            moveAreaSize.x = Mathf.Abs((maxMoveArea.x - moveAreaMarginRight) - (moveAreaCollider.bounds.min.x + moveAreaMarginLeft));
+            moveAreaSize.y = Mathf.Abs((moveAreaCollider.bounds.max.y - moveAreaMarginUp) - (moveAreaCollider.bounds.min.y + moveAreaMarginDown));
         }
 
-        Gizmos.DrawCube(center + Vector3.forward * 5f, size);
+        Gizmos.DrawCube((Vector3)moveAreaCenter + Vector3.forward * 5f, moveAreaSize);
     }
 
 }
@@ -305,3 +325,4 @@ public enum PlayerAIActionState
     Skill2,
     Skill3
 }
+ 

@@ -22,8 +22,10 @@ public class PlayerAIManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        for (int i = 0; i < moveAreaCollider.Length; ++i) {
-            if (moveAreaCollider[i].composite != null && compositeMoveArea.Find(item => item == moveAreaCollider[i].composite) == null) {
+        for (int i = 0; i < moveAreaCollider.Length; ++i)
+        {
+            if (moveAreaCollider[i].composite != null && compositeMoveArea.Find(item => item == moveAreaCollider[i].composite) == null)
+            {
                 compositeMoveArea.Add(moveAreaCollider[i].composite);
             }
         }
@@ -47,23 +49,32 @@ public class PlayerAIManager : MonoBehaviour
     {
         for (int i = 0; i < moveAreaCollider.Length; ++i)
         {
-            if (IsContainArea(i, _tr))
+            if (IsContainPointInArea(i, _tr))
                 return i;
-            
+
         }
         return -1;
     }
 
-    public bool IsContainArea(int _belongAreaID, Transform _tr)
+    public bool IsContainPointInArea(int _belongAreaID, Transform _tr)
     {
         return moveAreaCollider[_belongAreaID].bounds.Contains(_tr.position);
     }
 
-    public BoxCollider2D GetMoveAreaWithID(int _areaID)
+    public bool IsContainBoundInArea(int _belongAreaID, Bounds _bounds)
+    {
+        return moveAreaCollider[_belongAreaID].bounds.Intersects(_bounds);
+    }
+
+    public BoxCollider2D GetMoveAreaColliderWithID(int _areaID)
     {
         return moveAreaCollider[_areaID];
     }
 
+    public MoveArea GetMoveAreaWithID(int _areaID)
+    {
+        return moveAreaCollider[_areaID].GetComponent<MoveArea>();
+    }
 
 
 }
