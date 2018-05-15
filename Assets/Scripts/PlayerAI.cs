@@ -17,9 +17,9 @@ public class PlayerAI : PlayerBehaviour
     public float changeActionStateTime = 0f;
     public float aiActionStateTime = 0f;
 
-    public MoveArea moveArea;
+    public List<MoveArea> moveArea;
+    private int moveAreaIndex = 0;
     private BoxCollider2D moveAreaCollider;
-    private BoxCollider2D aiCollider;
     public int belongAreaID = 0;
     public float wallMargin = 2f;
 
@@ -43,7 +43,8 @@ public class PlayerAI : PlayerBehaviour
         state.isAI = true;
         state.isInput = false;
         tr = GetComponent<Transform>();
-        aiCollider = GetComponent<BoxCollider2D>();
+
+
     }
 
     void Start()
@@ -59,7 +60,6 @@ public class PlayerAI : PlayerBehaviour
 
         while (true)
         {
-
             switch (aiMoveState)
             {
                 case PlayerAIMoveState.Idle:
@@ -88,16 +88,11 @@ public class PlayerAI : PlayerBehaviour
                     break;
             }
 
-            if (!manager.IsContainPointInArea(belongAreaID - 1, tr))
+            if (moveArea.Count > 0
+                && !manager.IsContainPointInArea((moveArea[moveAreaIndex].GetOrignAreaID() - 1), tr))
             {
                 ChangeMoveState(PlayerAIMoveState.Move);
             }
-
-            //if (!manager.IsContainBoundInArea(belongAreaID - 1, aiCollider.bounds))
-            //{
-            //    print("out bound");
-            //    ChangeMoveState(PlayerAIMoveState.Move);
-            //}
 
             aiMoveStateTime += Time.deltaTime;
 
@@ -247,10 +242,39 @@ public class PlayerAI : PlayerBehaviour
         }
     }
 
+    public void EnterMoveArea()
+    {
+        moveArea = manager.GetMoveAreaWithID(belongAreaID);
+        for (int i = 0; i < moveArea.Count; ++i)
+        {
+            moveArea[i].AddAI(this);
+        }
+    }
+
+    public void ExitMoveArea()
+    {
+        for (int i = 0; i < moveArea.Count; ++i)
+        {
+            moveArea[i].SubAI(this);
+        }
+    }
+
     public Vector2 GetRandomPos()
     {
-        moveAreaCollider = manager.GetMoveAreaColliderWithID(belongAreaID - 1);
-        moveArea = manager.GetMoveAreaWithID(belongAreaID - 1);
+        ExitMoveArea();
+
+        EnterMoveArea();
+
+        if (moveArea.Count < 1)
+        {
+            print(gameObject.name+" Not Found ID" + belongAreaID);
+            return Vector2.zero;
+        }
+
+        moveAreaIndex = Random.Range(0, moveArea.Count);
+
+        moveAreaCollider = moveArea[moveAreaIndex].GetBoxCollider();
+        belongAreaID = moveArea[moveAreaIndex].areaID;
 
         Vector2 randPos;
 
@@ -274,8 +298,7 @@ public class PlayerAI : PlayerBehaviour
 
     public void ChangeAreaID(int _areaID)
     {
-
-
+        belongAreaID = _areaID;
     }
 
     void OnDrawGizmos()
@@ -325,4 +348,3 @@ public enum PlayerAIActionState
     Skill2,
     Skill3
 }
- 

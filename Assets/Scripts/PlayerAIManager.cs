@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class PlayerAIManager : MonoBehaviour
 {
-
     public bool DEBUGMODE = false;
 
+    public MoveArea[] moveAreaList;
     public BoxCollider2D[] moveAreaCollider;
-
-    public List<CompositeCollider2D> compositeMoveArea;
 
     public List<PlayerAI> aiList;
 
@@ -18,17 +16,6 @@ public class PlayerAIManager : MonoBehaviour
     void Awake()
     {
         PlayerAI.manager = this;
-    }
-
-    private void FixedUpdate()
-    {
-        for (int i = 0; i < moveAreaCollider.Length; ++i)
-        {
-            if (moveAreaCollider[i].composite != null && compositeMoveArea.Find(item => item == moveAreaCollider[i].composite) == null)
-            {
-                compositeMoveArea.Add(moveAreaCollider[i].composite);
-            }
-        }
     }
 
     void OnDrawGizmos()
@@ -47,7 +34,7 @@ public class PlayerAIManager : MonoBehaviour
 
     public int FindContainID(Transform _tr)
     {
-        for (int i = 0; i < moveAreaCollider.Length; ++i)
+        for (int i = 0; i < moveAreaList.Length; ++i)
         {
             if (IsContainPointInArea(i, _tr))
                 return i;
@@ -58,23 +45,30 @@ public class PlayerAIManager : MonoBehaviour
 
     public bool IsContainPointInArea(int _belongAreaID, Transform _tr)
     {
-        return moveAreaCollider[_belongAreaID].bounds.Contains(_tr.position);
+        return moveAreaList[_belongAreaID].GetBoxCollider().bounds.Contains(_tr.position);
     }
 
     public bool IsContainBoundInArea(int _belongAreaID, Bounds _bounds)
     {
-        return moveAreaCollider[_belongAreaID].bounds.Intersects(_bounds);
+        return moveAreaList[_belongAreaID].GetBoxCollider().bounds.Intersects(_bounds);
     }
 
-    public BoxCollider2D GetMoveAreaColliderWithID(int _areaID)
+    public MoveArea GetMoveAreaWithIndex(int _index)
     {
-        return moveAreaCollider[_areaID];
+        return moveAreaList[_index].GetComponent<MoveArea>();
     }
 
-    public MoveArea GetMoveAreaWithID(int _areaID)
+    public List<MoveArea> GetMoveAreaWithID(int _areaID)
     {
-        return moveAreaCollider[_areaID].GetComponent<MoveArea>();
+        List<MoveArea> list = new List<MoveArea>();
+
+        for (int i = 0; i < moveAreaList.Length; ++i)
+        {
+            if (moveAreaList[i].areaID == _areaID)
+                list.Add(moveAreaList[i]);
+        }
+
+        return list;
     }
-
-
+    
 }

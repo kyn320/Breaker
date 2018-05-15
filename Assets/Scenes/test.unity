@@ -331,6 +331,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   areaID: 9
   compositeList: []
+  inAreaAiList: []
 --- !u!50 &101595680
 Rigidbody2D:
   serializedVersion: 4
@@ -539,6 +540,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   areaID: 2
   compositeList: []
+  inAreaAiList: []
 --- !u!50 &189139705
 Rigidbody2D:
   serializedVersion: 4
@@ -772,7 +774,7 @@ MonoBehaviour:
   aiMoveStateTime: 0
   changeActionStateTime: 0
   aiActionStateTime: 0
-  moveArea: {fileID: 0}
+  moveArea: []
   belongAreaID: 5
   wallMargin: 2
   moveAreaMarginUp: 0
@@ -1115,6 +1117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   areaID: 6
   compositeList: []
+  inAreaAiList: []
 --- !u!50 &295292032
 Rigidbody2D:
   serializedVersion: 4
@@ -1506,6 +1509,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   areaID: 8
   compositeList: []
+  inAreaAiList: []
 --- !u!50 &395589884
 Rigidbody2D:
   serializedVersion: 4
@@ -2353,6 +2357,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   areaID: 7
   compositeList: []
+  inAreaAiList: []
 --- !u!50 &775396690
 Rigidbody2D:
   serializedVersion: 4
@@ -2577,6 +2582,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   areaID: 5
   compositeList: []
+  inAreaAiList: []
 --- !u!50 &847720154
 Rigidbody2D:
   serializedVersion: 4
@@ -2821,6 +2827,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   areaID: 1
   compositeList: []
+  inAreaAiList: []
 --- !u!50 &1006115021
 Rigidbody2D:
   serializedVersion: 4
@@ -3127,7 +3134,7 @@ MonoBehaviour:
   aiMoveStateTime: 0
   changeActionStateTime: 0
   aiActionStateTime: 0
-  moveArea: {fileID: 0}
+  moveArea: []
   belongAreaID: 8
   wallMargin: 2
   moveAreaMarginUp: 0
@@ -3308,6 +3315,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DEBUGMODE: 1
+  moveAreaList:
+  - {fileID: 1006115020}
+  - {fileID: 189139704}
+  - {fileID: 1848696122}
+  - {fileID: 1590175692}
+  - {fileID: 847720153}
+  - {fileID: 295292031}
+  - {fileID: 775396689}
+  - {fileID: 395589883}
+  - {fileID: 101595679}
   moveAreaCollider:
   - {fileID: 1006115018}
   - {fileID: 189139703}
@@ -3318,10 +3335,13 @@ MonoBehaviour:
   - {fileID: 775396687}
   - {fileID: 395589882}
   - {fileID: 101595677}
-  compositeMoveArea: []
   aiList:
   - {fileID: 1822706862}
   - {fileID: 1485810567}
+  - {fileID: 1952774413}
+  - {fileID: 214923661}
+  - {fileID: 1081179050}
+  - {fileID: 1461893290}
   wallTransform: {fileID: 616141018}
 --- !u!114 &1101179727
 MonoBehaviour:
@@ -3339,17 +3359,17 @@ MonoBehaviour:
   - {x: 0, y: 0}
   - {x: 0, y: -3.5}
   moveRange:
-  - {x: 5, y: 0.5}
-  - {x: 5, y: 0.5}
-  - {x: 5, y: 0.5}
+  - {x: 5, y: 0.6}
+  - {x: 5, y: 0.6}
+  - {x: 5, y: 0.6}
   trainList:
   - {fileID: 241433430}
   - {fileID: 475451268}
   - {fileID: 1941585078}
   trainStateXList: 000000000000000000000000
   trainStateYList: 000000000000000000000000
-  timeChangeDelay: 10
-  moveSpeed: 0.25
+  timeChangeDelay: 5
+  moveSpeed: 1
 --- !u!1 &1174811094
 GameObject:
   m_ObjectHideFlags: 0
@@ -4235,7 +4255,7 @@ MonoBehaviour:
   aiMoveStateTime: 0
   changeActionStateTime: 0
   aiActionStateTime: 0
-  moveArea: {fileID: 0}
+  moveArea: []
   belongAreaID: 8
   wallMargin: 2
   moveAreaMarginUp: 0
@@ -4454,7 +4474,7 @@ MonoBehaviour:
   aiMoveStateTime: 0
   changeActionStateTime: 0
   aiActionStateTime: 0
-  moveArea: {fileID: 0}
+  moveArea: []
   belongAreaID: 2
   wallMargin: 2
   moveAreaMarginUp: 0
@@ -4913,6 +4933,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   areaID: 4
   compositeList: []
+  inAreaAiList: []
 --- !u!50 &1590175693
 Rigidbody2D:
   serializedVersion: 4
@@ -5612,7 +5633,7 @@ MonoBehaviour:
   aiMoveStateTime: 0
   changeActionStateTime: 0
   aiActionStateTime: 0
-  moveArea: {fileID: 0}
+  moveArea: []
   belongAreaID: 2
   wallMargin: 2
   moveAreaMarginUp: 0
@@ -5865,6 +5886,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   areaID: 3
   compositeList: []
+  inAreaAiList: []
 --- !u!50 &1848696123
 Rigidbody2D:
   serializedVersion: 4
@@ -6211,7 +6233,7 @@ MonoBehaviour:
   aiMoveStateTime: 0
   changeActionStateTime: 0
   aiActionStateTime: 0
-  moveArea: {fileID: 0}
+  moveArea: []
   belongAreaID: 5
   wallMargin: 2
   moveAreaMarginUp: 0
