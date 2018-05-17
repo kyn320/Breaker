@@ -35,6 +35,8 @@ public class PlayerAI : PlayerBehaviour
 
     public Vector3 targetPos;
 
+    public bool traceWallPos = false;
+
     [SerializeField]
     bool DEBUGMODE = false;
 
@@ -50,6 +52,16 @@ public class PlayerAI : PlayerBehaviour
 
     void Start()
     {
+        EnterMoveArea();
+
+        if (moveArea.Count > 0)
+        {
+            moveAreaIndex = Random.Range(0, moveArea.Count);
+
+            moveAreaCollider = moveArea[moveAreaIndex].GetBoxCollider();
+            belongAreaID = moveArea[moveAreaIndex].areaID;
+        }
+
         stateUpdate = StartCoroutine(StateUpdate());
     }
 
@@ -58,36 +70,13 @@ public class PlayerAI : PlayerBehaviour
 
     IEnumerator StateUpdate()
     {
-
         while (true)
         {
             switch (aiMoveState)
             {
                 case PlayerAIMoveState.Idle:
                 case PlayerAIMoveState.Move:
-                    if (controller.focusDir.x < 0)
-                    {
-                        if (targetPos.x < manager.wallTransform.position.x + wallMargin)
-                        {
-                            minMoveArea.x = manager.wallTransform.position.x + wallMargin;
-                            focusDir = -1;
-                        }
-                        else
-                            minMoveArea.x = moveAreaCollider.bounds.min.x;
-
-                    }
-                    else
-                    {
-                        if (targetPos.x > manager.wallTransform.position.x - wallMargin)
-                        {
-                            maxMoveArea.x = manager.wallTransform.position.x - wallMargin;
-                            focusDir = 1;
-                        }
-                        else
-                            maxMoveArea.x = moveAreaCollider.bounds.max.x;
-
-                    }
-
+                    UpdateMinMaxPosition();
                     break;
                 case PlayerAIMoveState.Doge:
                     break;
@@ -102,7 +91,7 @@ public class PlayerAI : PlayerBehaviour
             }
 
             if (moveArea.Count > 0
-                && (!manager.IsContainPointInArea((moveArea[moveAreaIndex].GetOrignAreaID() - 1), tr) || !CheckPossibleMoveArea()))
+                && !manager.IsContainPointInArea((moveArea[moveAreaIndex].GetOrignAreaID() - 1), tr))
             {
                 ChangeMoveState(PlayerAIMoveState.Move);
             }
@@ -276,10 +265,54 @@ public class PlayerAI : PlayerBehaviour
         }
     }
 
+    void UpdateMinMaxPosition()
+    {
+        if (controller.focusDir.x < 0)
+        {
+            if (traceWallPos)
+            {
+                minMoveArea.x = manager.wallTransform.position.x + wallMargin;
+            }
+            else
+                minMoveArea.x = moveAreaCollider.bounds.min.x;
+
+            focusDir = -1;
+        }
+        else
+        {
+            if (traceWallPos)
+            {
+                maxMoveArea.x = manager.wallTransform.position.x - wallMargin;
+            }
+            else
+                maxMoveArea.x = moveAreaCollider.bounds.max.x;
+
+            focusDir = 1;
+        }
+    }
+
     public bool CheckPossibleMoveArea()
     {
-        Debug.DrawRay(tr.position, (targetPos - tr.position).normalized * Vector2.Distance(targetPos, tr.position), Color.red, 1f);
-        return !Physics2D.Raycast(tr.position, (targetPos - tr.position).normalized, Vector2.Distance(targetPos, tr.position), LayerMask.GetMask("Wall"));
+        Debug.DrawRay(tr.position, (targetPos - tr.position).normalized * Vector2.Distance(targetPos, tr.position), Color.red, 0.1f);
+        bool isMove = Physics2D.Raycast(tr.position, (targetPos - tr.position).normalized, Vector2.Distance(targetPos, tr.position), LayerMask.GetMask("Wall"));
+
+        traceWallPos = !isMove;
+
+        UpdateMinMaxPosition();
+
+        return isMove;
+    }
+
+    public bool CheckPossibleMoveArea(Vector3 _pos)
+    {
+        Debug.DrawRay(tr.position, (_pos - tr.position).normalized * Vector2.Distance(_pos, tr.position), Color.red, 0.1f);
+        bool isMove = Physics2D.Raycast(tr.position, (_pos - tr.position).normalized, Vector2.Distance(_pos, tr.position), LayerMask.GetMask("Wall"));
+
+        traceWallPos = !isMove;
+
+        UpdateMinMaxPosition();
+
+        return isMove;
     }
 
     public Vector2 GetRandomPos()
@@ -299,22 +332,36 @@ public class PlayerAI : PlayerBehaviour
         moveAreaCollider = moveArea[moveAreaIndex].GetBoxCollider();
         belongAreaID = moveArea[moveAreaIndex].areaID;
 
-        Vector2 randPos;
+        Vector2 randPos =  Vector2.zero;
 
-        if (focusDir < 0)
+        int loopChecker = 0;
+
+        do
         {
-            randPos = new Vector2(Random.Range(minMoveArea.x + moveAreaMarginLeft,
-                                                    moveAreaCollider.bounds.max.x - moveAreaMarginRight),
-                                        Random.Range(moveAreaCollider.bounds.min.y + moveAreaMarginDown,
-                                                     moveAreaCollider.bounds.max.y - moveAreaMarginUp));
-        }
-        else
-        {
-            randPos = new Vector2(Random.Range(moveAreaCollider.bounds.min.x + moveAreaMarginLeft,
-                                                    maxMoveArea.x - moveAreaMarginRight),
-                                        Random.Range(moveAreaCollider.bounds.min.y + moveAreaMarginDown,
-                                                     moveAreaCollider.bounds.max.y - moveAreaMarginUp));
-        }
+            if (loopChecker > 50)
+            {
+                print("Loop Over");
+                break;
+            }
+
+            if (focusDir < 0)
+            {
+                randPos = new Vector2(Random.Range(minMoveArea.x + moveAreaMarginLeft,
+                                                        moveAreaCollider.bounds.max.x - moveAreaMarginRight),
+                                            Random.Range(moveAreaCollider.bounds.min.y + moveAreaMarginDown,
+                                                         moveAreaCollider.bounds.max.y - moveAreaMarginUp));
+            }
+            else
+            {
+                randPos = new Vector2(Random.Range(moveAreaCollider.bounds.min.x + moveAreaMarginLeft,
+                                                        maxMoveArea.x - moveAreaMarginRight),
+                                            Random.Range(moveAreaCollider.bounds.min.y + moveAreaMarginDown,
+                                                         moveAreaCollider.bounds.max.y - moveAreaMarginUp));
+            }
+
+            ++loopChecker;
+        } while (CheckPossibleMoveArea(randPos));
+
 
         return randPos;
     }
