@@ -33,6 +33,7 @@ public class PlayerAI : PlayerBehaviour
     public Vector2 minMoveArea, maxMoveArea;
     public Vector2 moveAreaCenter, moveAreaSize;
 
+    public Vector3 targetPos;
 
     [SerializeField]
     bool DEBUGMODE = false;
@@ -66,13 +67,25 @@ public class PlayerAI : PlayerBehaviour
                 case PlayerAIMoveState.Move:
                     if (controller.focusDir.x < 0)
                     {
-                        minMoveArea.x = manager.wallTransform.position.x + wallMargin;
-                        focusDir = -1;
+                        if (targetPos.x < manager.wallTransform.position.x + wallMargin)
+                        {
+                            minMoveArea.x = manager.wallTransform.position.x + wallMargin;
+                            focusDir = -1;
+                        }
+                        else
+                            minMoveArea.x = moveAreaCollider.bounds.min.x;
+
                     }
                     else
                     {
-                        maxMoveArea.x = manager.wallTransform.position.x - wallMargin;
-                        focusDir = 1;
+                        if (targetPos.x > manager.wallTransform.position.x - wallMargin)
+                        {
+                            maxMoveArea.x = manager.wallTransform.position.x - wallMargin;
+                            focusDir = 1;
+                        }
+                        else
+                            maxMoveArea.x = moveAreaCollider.bounds.max.x;
+
                     }
 
                     break;
@@ -89,7 +102,7 @@ public class PlayerAI : PlayerBehaviour
             }
 
             if (moveArea.Count > 0
-                && !manager.IsContainPointInArea((moveArea[moveAreaIndex].GetOrignAreaID() - 1), tr))
+                && (!manager.IsContainPointInArea((moveArea[moveAreaIndex].GetOrignAreaID() - 1), tr) || !CheckPossibleMoveArea()))
             {
                 ChangeMoveState(PlayerAIMoveState.Move);
             }
@@ -180,7 +193,8 @@ public class PlayerAI : PlayerBehaviour
 
             case PlayerAIMoveState.Move:
 
-                controller.SetTarget(GetRandomPos());
+                targetPos = GetRandomPos();
+                controller.SetTarget(targetPos);
 
                 if (_changeTime > 0f)
                     changeMoveStateTime = _changeTime;
@@ -196,7 +210,10 @@ public class PlayerAI : PlayerBehaviour
                 break;
 
             case PlayerAIMoveState.Jump:
-                controller.SetTarget(GetRandomPos());
+
+                targetPos = GetRandomPos();
+                controller.SetTarget(targetPos);
+
                 controller.Jump();
                 changeMoveStateTime = 999f;
                 break;
@@ -259,6 +276,12 @@ public class PlayerAI : PlayerBehaviour
         }
     }
 
+    public bool CheckPossibleMoveArea()
+    {
+        Debug.DrawRay(tr.position, (targetPos - tr.position).normalized * Vector2.Distance(targetPos, tr.position), Color.red, 1f);
+        return !Physics2D.Raycast(tr.position, (targetPos - tr.position).normalized, Vector2.Distance(targetPos, tr.position), LayerMask.GetMask("Wall"));
+    }
+
     public Vector2 GetRandomPos()
     {
         ExitMoveArea();
@@ -267,7 +290,7 @@ public class PlayerAI : PlayerBehaviour
 
         if (moveArea.Count < 1)
         {
-            print(gameObject.name+" Not Found ID" + belongAreaID);
+            print(gameObject.name + " Not Found ID" + belongAreaID);
             return Vector2.zero;
         }
 

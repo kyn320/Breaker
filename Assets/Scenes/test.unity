@@ -777,15 +777,16 @@ MonoBehaviour:
   moveArea: []
   belongAreaID: 5
   wallMargin: 2
-  moveAreaMarginUp: 0
-  moveAreaMarginDown: 0
-  moveAreaMarginLeft: 0
-  moveAreaMarginRight: 0
+  moveAreaMarginUp: 0.2
+  moveAreaMarginDown: 0.2
+  moveAreaMarginLeft: 0.2
+  moveAreaMarginRight: 0.2
   focusDir: 0
   minMoveArea: {x: 1, y: -4}
   maxMoveArea: {x: 8, y: 4}
   moveAreaCenter: {x: 0, y: 0}
   moveAreaSize: {x: 0, y: 0}
+  targetPos: {x: 0, y: 0}
   DEBUGMODE: 1
 --- !u!212 &214923662
 SpriteRenderer:
@@ -1713,7 +1714,7 @@ GameObject:
   - component: {fileID: 616141015}
   - component: {fileID: 616141019}
   - component: {fileID: 616141020}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Wall
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -3137,15 +3138,16 @@ MonoBehaviour:
   moveArea: []
   belongAreaID: 8
   wallMargin: 2
-  moveAreaMarginUp: 0
-  moveAreaMarginDown: 0
-  moveAreaMarginLeft: 0
-  moveAreaMarginRight: 0
+  moveAreaMarginUp: 0.2
+  moveAreaMarginDown: 0.2
+  moveAreaMarginLeft: 0.2
+  moveAreaMarginRight: 0.2
   focusDir: 0
   minMoveArea: {x: -8, y: -4}
   maxMoveArea: {x: 1, y: 4}
   moveAreaCenter: {x: 0, y: 0}
   moveAreaSize: {x: 0, y: 0}
+  targetPos: {x: 0, y: 0}
   DEBUGMODE: 1
 --- !u!212 &1081179051
 SpriteRenderer:
@@ -3359,9 +3361,9 @@ MonoBehaviour:
   - {x: 0, y: 0}
   - {x: 0, y: -3.5}
   moveRange:
-  - {x: 5, y: 0.6}
-  - {x: 5, y: 0.6}
-  - {x: 5, y: 0.6}
+  - {x: 5, y: 0.57}
+  - {x: 5, y: 0.57}
+  - {x: 5, y: 0.57}
   trainList:
   - {fileID: 241433430}
   - {fileID: 475451268}
@@ -4258,15 +4260,16 @@ MonoBehaviour:
   moveArea: []
   belongAreaID: 8
   wallMargin: 2
-  moveAreaMarginUp: 0
-  moveAreaMarginDown: 0
-  moveAreaMarginLeft: 0
-  moveAreaMarginRight: 0
+  moveAreaMarginUp: 0.2
+  moveAreaMarginDown: 0.2
+  moveAreaMarginLeft: 0.2
+  moveAreaMarginRight: 0.2
   focusDir: 0
   minMoveArea: {x: 1, y: -4}
   maxMoveArea: {x: 8, y: 4}
   moveAreaCenter: {x: 0, y: 0}
   moveAreaSize: {x: 0, y: 0}
+  targetPos: {x: 0, y: 0}
   DEBUGMODE: 1
 --- !u!212 &1461893291
 SpriteRenderer:
@@ -4477,15 +4480,16 @@ MonoBehaviour:
   moveArea: []
   belongAreaID: 2
   wallMargin: 2
-  moveAreaMarginUp: 0
-  moveAreaMarginDown: 0
-  moveAreaMarginLeft: 0
-  moveAreaMarginRight: 0
+  moveAreaMarginUp: 0.2
+  moveAreaMarginDown: 0.2
+  moveAreaMarginLeft: 0.2
+  moveAreaMarginRight: 0.2
   focusDir: 0
   minMoveArea: {x: 1, y: -4}
   maxMoveArea: {x: 8, y: 4}
   moveAreaCenter: {x: 0, y: 0}
   moveAreaSize: {x: 0, y: 0}
+  targetPos: {x: 0, y: 0}
   DEBUGMODE: 1
 --- !u!212 &1485810568
 SpriteRenderer:
@@ -5636,15 +5640,16 @@ MonoBehaviour:
   moveArea: []
   belongAreaID: 2
   wallMargin: 2
-  moveAreaMarginUp: 0
-  moveAreaMarginDown: 0
-  moveAreaMarginLeft: 0
-  moveAreaMarginRight: 0
+  moveAreaMarginUp: 0.2
+  moveAreaMarginDown: 0.2
+  moveAreaMarginLeft: 0.2
+  moveAreaMarginRight: 0.2
   focusDir: 0
   minMoveArea: {x: -8, y: -4}
   maxMoveArea: {x: 1, y: 4}
   moveAreaCenter: {x: 0, y: 0}
   moveAreaSize: {x: 0, y: 0}
+  targetPos: {x: 0, y: 0}
   DEBUGMODE: 1
 --- !u!212 &1822706863
 SpriteRenderer:
@@ -6236,15 +6241,16 @@ MonoBehaviour:
   moveArea: []
   belongAreaID: 5
   wallMargin: 2
-  moveAreaMarginUp: 0
-  moveAreaMarginDown: 0
-  moveAreaMarginLeft: 0
-  moveAreaMarginRight: 0
+  moveAreaMarginUp: 0.2
+  moveAreaMarginDown: 0.2
+  moveAreaMarginLeft: 0.2
+  moveAreaMarginRight: 0.2
   focusDir: 0
   minMoveArea: {x: -8, y: -4}
   maxMoveArea: {x: 1, y: 4}
   moveAreaCenter: {x: 0, y: 0}
   moveAreaSize: {x: 0, y: 0}
+  targetPos: {x: 0, y: 0}
   DEBUGMODE: 1
 --- !u!212 &1952774414
 SpriteRenderer:
